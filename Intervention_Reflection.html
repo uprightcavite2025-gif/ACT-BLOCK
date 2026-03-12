@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Intervention Reflection</title>
+  <style>
+    :root{
+      --bg:#f4f8fc;
+      --page:#ffffff;
+      --panel:#ffffff;
+      --panelSoft:#f5fffe;
+      --text:#000C48;
+      --muted:#4e6288;
+      --line:rgba(0,12,72,.12);
+
+      --primary:#211499;
+      --turquoise:#3FC2C2;
+      --neon:#63F8EF;
+      --light:#CDFFFC;
+      --teal:#367484;
+      --navy:#000C48;
+
+      --darkCard:#0f1a5f;
+      --darkCard2:#112266;
+      --darkText:#ffffff;
+      --darkMuted:#d7eef0;
+
+      --strong:#19b8a9;
+      --fragile:#2d7c8d;
+      --risk:#d39a00;
+      --erosion:#c85d5d;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial,sans-serif;
+      background:
+        radial-gradient(900px 520px at 10% 0%, rgba(63,194,194,.10), transparent 60%),
+        radial-gradient(820px 520px at 100% 10%, rgba(99,248,239,.08), transparent 55%),
+        var(--bg);
+      color:var(--text);
+    }
+
+    .wrap{max-width:980px;margin:0 auto;padding:16px 14px 18px}
+
+    .hero{
+      border:1px solid rgba(63,194,194,.30);
+      border-radius:18px;
+      padding:16px;
+      background:linear-gradient(180deg, #eaf8f8, #dff7f5);
+      box-shadow:0 12px 28px rgba(0,12,72,.08);
+      animation:fadeUp .35s ease;
+    }
+    h1{
+      margin:0 0 8px;
+      font-size:20px;
+      font-weight:800;
+      letter-spacing:.1px;
+      color:var(--primary);
+    }
+    .sub{margin:0;color:var(--muted);line-height:1.5;font-size:13px}
+    .hl{
+      display:inline-block;
+      padding:2px 8px;
+      border-radius:999px;
+      border:1px solid rgba(33,20,153,.14);
+      background:#fff;
+      font-weight:850;
+      letter-spacing:.2px;
+      margin-right:8px;
+    }
+    .hl.before{border-color:rgba(63,194,194,.45);color:var(--teal)}
+    .hl.important{border-color:rgba(211,154,0,.35);color:var(--risk)}
+
+    .card{
+      margin-top:12px;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:var(--panel);
+      overflow:visible;
+      box-shadow:0 12px 28px rgba(0,12,72,.08);
+    }
+    .cardHeader{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      justify-content:space-between;
+      padding:12px 14px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      border-top-left-radius:18px;
+      border-top-right-radius:18px;
+      background:linear-gradient(180deg, #d5f1ee, #c1e6e1);
+    }
+    .cardHeader h2{margin:0;font-size:15px;font-weight:800;color:var(--primary)}
+    .small{color:var(--muted);font-size:12px;line-height:1.45}
+    .section{padding:12px 14px 92px}
+    .screen{display:none;animation:fadeUp .28s ease}
+    .screen.active{display:block}
+
+    .box{
+      border:1px solid rgba(0,12,72,.10);
+      border-radius:14px;
+      padding:12px;
+      background:var(--panel);
+      margin-bottom:10px;
+    }
+    .box.soft{background:var(--panelSoft);border-color:rgba(63,194,194,.22)}
+    .box h3{
+      margin:0 0 8px;
+      font-size:14px;
+      font-weight:800;
+      color:var(--primary);
+    }
+    .box p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.5;
+    }
+    .divider{height:1px;background:var(--line);margin:10px 0}
+    .err{color:var(--erosion);font-size:13px;margin:6px 0 0}
+
+    label{
+      display:block;
+      font-size:13px;
+      color:var(--primary);
+      margin-bottom:6px;
+      font-weight:800;
+    }
+    .fieldHint{
+      margin:0 0 8px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.45;
+    }
+
+    textarea{
+      width:100%;
+      border-radius:12px;
+      border:1px solid rgba(0,12,72,.14);
+      background:#fff;
+      color:var(--text);
+      padding:10px 10px;
+      outline:none;
+      font-size:14px;
+      font-family:Arial,sans-serif;
+      min-height:110px;
+      resize:vertical;
+    }
+
+    .previewWrap{margin-top:10px;display:none}
+    .previewTitle{margin:0 0 8px;font-size:12px;color:var(--muted);font-weight:750}
+    .previewImg{
+      width:100%;
+      height:auto;
+      border-radius:14px;
+      border:1px solid rgba(0,12,72,.10);
+      background:#fff;
+      display:block;
+    }
+
+    .actionsSticky{
+      position:sticky;
+      bottom:0;
+      z-index:9999;
+      margin-top:12px;
+      border:1px solid rgba(0,12,72,.10);
+      border-radius:18px;
+      background:rgba(255,255,255,.94);
+      backdrop-filter:blur(6px);
+      padding:10px 12px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      box-shadow:0 10px 22px rgba(0,12,72,.10);
+    }
+    .actionsLeft{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    button{
+      appearance:none;
+      border:0;
+      border-radius:14px;
+      padding:10px 14px;
+      cursor:pointer;
+      font-weight:750;
+      background:linear-gradient(90deg, rgba(63,194,194,.98), rgba(99,248,239,.95));
+      color:#001018;
+      transition:transform .12s ease, box-shadow .16s ease;
+    }
+    button:hover{
+      transform:translateY(-1px);
+      box-shadow:0 8px 18px rgba(0,12,72,.12);
+    }
+    button.secondary{
+      background:#fff;
+      border:1px solid rgba(0,12,72,.14);
+      color:var(--text);
+      font-weight:650;
+    }
+    button:disabled{opacity:.55;cursor:not-allowed;transform:none;box-shadow:none}
+
+    .kpi{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .kpiCard{
+      flex:1;
+      min-width:220px;
+      border:1px solid rgba(0,12,72,.10);
+      border-radius:14px;
+      padding:12px;
+      background:#fff;
+    }
+    .kpiTitle{font-size:12px;color:var(--muted);font-weight:750}
+    .kpiVal{margin-top:6px;font-size:18px;font-weight:900;color:var(--primary)}
+
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:12px;
+      padding:5px 10px;
+      border-radius:999px;
+      border:1px solid rgba(0,12,72,.12);
+      margin-top:10px;
+      font-weight:850;
+      background:#fff;
+      white-space:nowrap;
+      color:var(--fragile);
+    }
+
+    .transitionCard{
+      border:1px solid rgba(63,194,194,.24);
+      background:linear-gradient(180deg,#f7ffff,#eefdfb);
+    }
+
+    @keyframes fadeUp{
+      from{opacity:0;transform:translateY(8px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+    @keyframes softPulse{
+      0%{box-shadow:0 0 0 rgba(63,194,194,0)}
+      50%{box-shadow:0 0 18px rgba(63,194,194,.15)}
+      100%{box-shadow:0 0 0 rgba(63,194,194,0)}
+    }
+    .pulse{animation:softPulse 2.4s ease-in-out infinite}
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <h1>Intervention Reflection</h1>
+    <p class="sub"><span class="hl before">Reflection</span>Now that you have completed the intervention, reflect honestly on what happened during the conversation or session.</p>
+    <p class="sub">Honest reflection strengthens learning because it connects real experience back to awareness and future action.</p>
+    <div class="divider"></div>
+    <p class="sub"><span class="hl important">Reference</span>Reflection helps connect experience to learning and strengthens leadership development <b>(Kolb, 1984)</b>.</p>
+  </div>
+
+  <div class="card" id="mainCard">
+    <div class="cardHeader">
+      <div>
+        <h2 id="screenTitle">Reflection (Complete After the Intervention)</h2>
+        <div class="small" id="screenSub">Answer the questions based on what actually happened during your intervention.</div>
+      </div>
+      <div class="small" id="pageLabel">1 / 2</div>
+    </div>
+
+    <div class="section">
+      <!-- PAGE 1 -->
+      <div class="screen active" id="s1">
+        <div class="box soft pulse">
+          <h3>Reflect honestly</h3>
+          <p>Use the questions below to capture what happened during the intervention. Focus on what you observed, what you intentionally applied, and what seemed to change.</p>
+        </div>
+
+        <div class="box">
+          <label for="q1">1. Which intervention did you apply?</label>
+          <p class="fieldHint">Name the intervention you used in practice.</p>
+          <textarea id="q1" placeholder="Write your answer here."></textarea>
+
+          <div class="divider"></div>
+
+          <label for="q2">2. What situation did the intervention address?</label>
+          <p class="fieldHint">Describe the team or workplace situation you were trying to improve.</p>
+          <textarea id="q2" placeholder="Write your answer here."></textarea>
+
+          <div class="divider"></div>
+
+          <label for="q3">3. How did the conversation or session unfold?</label>
+          <p class="fieldHint">Describe how the discussion started, developed, and ended.</p>
+          <textarea id="q3" placeholder="Write your answer here."></textarea>
+
+          <div id="err1" class="err" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <!-- PAGE 2 -->
+      <div class="screen" id="s2">
+        <div class="box">
+          <label for="q4">4. What trust signals did you consciously apply?</label>
+          <p class="fieldHint">Describe the trust-building behaviors you intentionally practiced during the intervention.</p>
+          <textarea id="q4" placeholder="Write your answer here."></textarea>
+
+          <div class="divider"></div>
+
+          <label for="q5">5. What changes or reactions did you observe?</label>
+          <p class="fieldHint">Describe any reactions, shifts, or signals that suggested movement in the conversation or team dynamic.</p>
+          <textarea id="q5" placeholder="Write your answer here."></textarea>
+
+          <div id="err2" class="err" aria-live="polite"></div>
+        </div>
+
+        <div class="box transitionCard">
+          <h3>Preview and next reflection</h3>
+          <p>Once you complete the answers below, generate and download your reflection summary.</p>
+          <div class="divider"></div>
+          <p class="small">Download your results and keep them ready. You will submit them later in the activity.</p>
+          <div class="divider"></div>
+          <p class="small"><b>Next:</b> Trust Growth Reflection — where you connect your intervention experience back to the trust driver that was most influenced.</p>
+        </div>
+
+        <div class="kpi" id="kpis"></div>
+
+        <div class="divider"></div>
+        <div class="box" style="background:rgba(33,20,153,.03);" id="interpretationBox"></div>
+
+        <div class="divider"></div>
+
+        <div class="previewWrap" id="previewWrap">
+          <p class="previewTitle">Preview (mobile: long-press to Save/Share if download is blocked)</p>
+          <img class="previewImg" id="previewImg" alt="Intervention reflection summary preview image" />
+        </div>
+
+        <canvas id="resultsCanvas" width="1240" height="1754" style="display:none;" aria-hidden="true"></canvas>
+
+        <div class="actionsLeft" style="margin-top:10px;">
+          <button class="secondary" id="btnPng" type="button" disabled>Download Reflection Summary (PNG)</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="actionsSticky">
+    <div class="actionsLeft">
+      <button class="secondary" id="btnBack" type="button">Back</button>
+      <button class="secondary" id="btnReset" type="button">Reset</button>
+    </div>
+    <div class="actionsLeft">
+      <button id="btnNext" type="button">Next</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  let currentScreen = 1;
+
+  function setScreen(n){
+    currentScreen = n;
+    ["s1","s2"].forEach((id, idx)=>{
+      document.getElementById(id).classList.toggle("active", (idx+1)===n);
+    });
+
+    const titles = {
+      1:["Reflection (Complete After the Intervention)","Answer the first set of reflection questions based on what actually happened."],
+      2:["Reflection Preview","Complete the remaining questions, then preview and download your reflection summary."]
+    };
+
+    document.getElementById("screenTitle").textContent = titles[n][0];
+    document.getElementById("screenSub").textContent = titles[n][1];
+    document.getElementById("pageLabel").textContent = n + " / 2";
+
+    document.getElementById("btnBack").disabled = n === 1;
+    document.getElementById("btnNext").textContent = n === 2 ? "Generate Preview" : "Next";
+  }
+
+  function validateStep1(){
+    const err = document.getElementById("err1");
+    err.textContent = "";
+    const ids = ["q1","q2","q3"];
+    for(const id of ids){
+      if(!(document.getElementById(id).value || "").trim()){
+        err.textContent = "Please complete all three questions before continuing.";
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function validateStep2(){
+    const err = document.getElementById("err2");
+    err.textContent = "";
+    const ids = ["q4","q5"];
+    for(const id of ids){
+      if(!(document.getElementById(id).value || "").trim()){
+        err.textContent = "Please complete both remaining questions before generating the preview.";
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function getState(){
+    return {
+      q1:(document.getElementById("q1").value || "").trim(),
+      q2:(document.getElementById("q2").value || "").trim(),
+      q3:(document.getElementById("q3").value || "").trim(),
+      q4:(document.getElementById("q4").value || "").trim(),
+      q5:(document.getElementById("q5").value || "").trim()
+    };
+  }
+
+  function wrapLines(ctx, text, maxWidth){
+    const words = String(text || "").split(/\s+/).filter(Boolean);
+    const lines = [];
+    let line = "";
+    for(const w of words){
+      const test = line ? line + " " + w : w;
+      if(ctx.measureText(test).width > maxWidth && line){
+        lines.push(line);
+        line = w;
+      }else{
+        line = test;
+      }
+    }
+    if(line) lines.push(line);
+    return lines;
+  }
+
+  function drawSectionTitle(ctx, title, x, y){
+    ctx.fillStyle = "#211499";
+    ctx.font = "800 22px Arial";
+    ctx.fillText(title, x, y);
+  }
+
+  function drawParagraph(ctx, text, x, y, width, fontSize=18, lineGap=28, color="#000C48"){
+    ctx.fillStyle = color;
+    ctx.font = `500 ${fontSize}px Arial`;
+    const lines = wrapLines(ctx, text, width);
+    lines.forEach((line, idx)=>{
+      ctx.fillText(line, x, y + idx * lineGap);
+    });
+    return y + lines.length * lineGap;
+  }
+
+  function roundRect(ctx,x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);
+    ctx.arcTo(x+w,y,x+w,y+h,r);
+    ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r);
+    ctx.arcTo(x,y,x+w,y,r);
+    ctx.closePath();
+  }
+
+  function renderCards(state){
+    document.getElementById("kpis").innerHTML = `
+      <div class="kpiCard">
+        <div class="kpiTitle">Intervention Applied</div>
+        <div class="kpiVal">${state.q1 || "—"}</div>
+        <div class="small">Named by the learner</div>
+      </div>
+      <div class="kpiCard">
+        <div class="kpiTitle">Situation Addressed</div>
+        <div class="kpiVal">${state.q2 || "—"}</div>
+        <div class="small">Observed workplace situation</div>
+      </div>
+      <div class="kpiCard">
+        <div class="kpiTitle">Next Reflection</div>
+        <div class="kpiVal">Trust Growth Reflection</div>
+        <div class="small">Connect the experience back to the trust driver</div>
+        <div class="tag">Next reflection</div>
+      </div>
+    `;
+
+    document.getElementById("interpretationBox").innerHTML = `
+      <h3>Reflection Guidance</h3>
+      <p>This reflection captures what happened during the intervention and what you observed in practice.</p>
+      <div class="divider"></div>
+      <p class="small"><b>Next step:</b> Download your results and keep them ready. You will submit them later in the activity. Then continue to the <b>Trust Growth Reflection</b> to identify which trust driver was most influenced.</p>
+    `;
+  }
+
+  function generateSummary(state){
+    const canvas = document.getElementById("resultsCanvas");
+    const ctx = canvas.getContext("2d");
+    const W = canvas.width, H = canvas.height;
+
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0,0,W,H);
+
+    ctx.fillStyle = "#CDFFFC";
+    ctx.fillRect(0,0,W,110);
+
+    ctx.fillStyle = "#211499";
+    ctx.font = "800 34px Arial";
+    ctx.fillText("Intervention Reflection Summary", 60, 68);
+
+    ctx.fillStyle = "#367484";
+    ctx.font = "600 18px Arial";
+    ctx.fillText("Trust Deep Dive", 60, 95);
+
+    ctx.textAlign = "right";
+    ctx.fillStyle = "#211499";
+    ctx.font = "700 18px Arial";
+    ctx.fillText("Atria Learning and Development", W - 60, 68);
+    ctx.textAlign = "left";
+
+    let x = 60;
+    let y = 150;
+    const contentW = W - 120;
+
+    drawSectionTitle(ctx, "Which intervention did you apply?", x, y);
+    y = drawParagraph(ctx, state.q1 || "—", x, y + 34, contentW) + 18;
+
+    drawSectionTitle(ctx, "What situation did the intervention address?", x, y);
+    y = drawParagraph(ctx, state.q2 || "—", x, y + 34, contentW) + 18;
+
+    drawSectionTitle(ctx, "How did the conversation or session unfold?", x, y);
+    y = drawParagraph(ctx, state.q3 || "—", x, y + 34, contentW) + 18;
+
+    drawSectionTitle(ctx, "What trust signals did you consciously apply?", x, y);
+    y = drawParagraph(ctx, state.q4 || "—", x, y + 34, contentW) + 18;
+
+    drawSectionTitle(ctx, "What changes or reactions did you observe?", x, y);
+    y = drawParagraph(ctx, state.q5 || "—", x, y + 34, contentW) + 22;
+
+    drawSectionTitle(ctx, "Transition to next reflection", x, y);
+    y = drawParagraph(
+      ctx,
+      "Download this reflection summary and keep it ready for submission later in the activity. Next, continue to the Trust Growth Reflection and identify which trust driver was most influenced by your intervention.",
+      x,
+      y + 34,
+      contentW
+    ) + 18;
+
+    ctx.strokeStyle = "rgba(0,12,72,.10)";
+    ctx.beginPath();
+    ctx.moveTo(60, H - 60);
+    ctx.lineTo(W - 60, H - 60);
+    ctx.stroke();
+
+    ctx.fillStyle = "#4e6288";
+    ctx.font = "500 15px Arial";
+    ctx.fillText("This guide is for learning and reflection purposes only.", 60, H - 28);
+
+    const url = canvas.toDataURL("image/png");
+    document.getElementById("previewImg").src = url;
+    document.getElementById("previewWrap").style.display = "block";
+    document.getElementById("btnPng").disabled = false;
+
+    renderCards(state);
+  }
+
+  function downloadPNG(){
+    const canvas = document.getElementById("resultsCanvas");
+    const url = canvas.toDataURL("image/png");
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "intervention-reflection-summary.png";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
+  document.addEventListener("DOMContentLoaded", ()=>{
+    setScreen(1);
+
+    const btnBack = document.getElementById("btnBack");
+    const btnReset = document.getElementById("btnReset");
+    const btnNext = document.getElementById("btnNext");
+    const btnPng = document.getElementById("btnPng");
+
+    btnBack.addEventListener("click", ()=>{
+      if(currentScreen > 1) setScreen(currentScreen - 1);
+    });
+
+    btnNext.addEventListener("click", ()=>{
+      if(currentScreen === 1){
+        if(!validateStep1()) return;
+        setScreen(2);
+        return;
+      }
+
+      if(currentScreen === 2){
+        if(!validateStep2()) return;
+        generateSummary(getState());
+      }
+    });
+
+    btnReset.addEventListener("click", ()=>{
+      ["q1","q2","q3","q4","q5"].forEach(id=>{
+        document.getElementById(id).value = "";
+      });
+      document.getElementById("err1").textContent = "";
+      document.getElementById("err2").textContent = "";
+      document.getElementById("previewWrap").style.display = "none";
+      document.getElementById("previewImg").src = "";
+      document.getElementById("btnPng").disabled = true;
+      document.getElementById("kpis").innerHTML = "";
+      document.getElementById("interpretationBox").innerHTML = "";
+      setScreen(1);
+      document.getElementById("mainCard").scrollIntoView({behavior:"smooth", block:"start"});
+    });
+
+    btnPng.addEventListener("click", ()=>downloadPNG());
+  });
+</script>
+</body>
+</html>
