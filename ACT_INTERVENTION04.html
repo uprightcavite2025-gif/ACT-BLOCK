@@ -1,0 +1,1589 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ACT Block — Trust Intervention</title>
+  <style>
+    :root{
+      --bg:#f4f8fc;
+      --page:#ffffff;
+      --panel:#ffffff;
+      --panelSoft:#f5fffe;
+      --text:#000C48;
+      --muted:#4e6288;
+      --line:rgba(0,12,72,.12);
+
+      --primary:#211499;
+      --turquoise:#3FC2C2;
+      --neon:#63F8EF;
+      --light:#CDFFFC;
+      --teal:#367484;
+      --navy:#000C48;
+
+      --darkCard:#0f1a5f;
+      --darkCard2:#112266;
+      --darkText:#ffffff;
+      --darkMuted:#d7eef0;
+
+      --strong:#19b8a9;
+      --fragile:#2d7c8d;
+      --risk:#d39a00;
+      --erosion:#c85d5d;
+    }
+
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:Arial,sans-serif;
+      background:
+        radial-gradient(900px 520px at 10% 0%, rgba(63,194,194,.10), transparent 60%),
+        radial-gradient(820px 520px at 100% 10%, rgba(99,248,239,.08), transparent 55%),
+        var(--bg);
+      color:var(--text);
+    }
+
+    .wrap{max-width:980px;margin:0 auto;padding:16px 14px 18px}
+
+    .hero{
+      border:1px solid rgba(63,194,194,.30);
+      border-radius:18px;
+      padding:16px;
+      background:linear-gradient(180deg, #eaf8f8, #dff7f5);
+      box-shadow:0 12px 28px rgba(0,12,72,.08);
+      animation:fadeUp .35s ease;
+    }
+    h1{
+      margin:0 0 8px;
+      font-size:20px;
+      font-weight:800;
+      letter-spacing:.1px;
+      color:var(--primary);
+    }
+    .sub{margin:0;color:var(--muted);line-height:1.5;font-size:13px}
+    .hl{
+      display:inline-block;
+      padding:2px 8px;
+      border-radius:999px;
+      border:1px solid rgba(33,20,153,.14);
+      background:#fff;
+      font-weight:850;
+      letter-spacing:.2px;
+      margin-right:8px;
+    }
+    .hl.before{border-color:rgba(63,194,194,.45);color:var(--teal)}
+    .hl.important{border-color:rgba(211,154,0,.35);color:var(--risk)}
+
+    .card{
+      margin-top:12px;
+      border:1px solid var(--line);
+      border-radius:18px;
+      background:var(--panel);
+      overflow:visible;
+      box-shadow:0 12px 28px rgba(0,12,72,.08);
+    }
+    .cardHeader{
+      display:flex;
+      gap:12px;
+      align-items:flex-start;
+      justify-content:space-between;
+      padding:12px 14px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      border-top-left-radius:18px;
+      border-top-right-radius:18px;
+      background:linear-gradient(180deg, #d5f1ee, #c1e6e1);
+    }
+    .cardHeader h2{margin:0;font-size:15px;font-weight:800;color:var(--primary)}
+    .small{color:var(--muted);font-size:12px;line-height:1.45}
+    .section{padding:12px 14px 92px}
+    .screen{display:none;animation:fadeUp .28s ease}
+    .screen.active{display:block}
+    .row{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+    }
+    @media (min-width:820px){
+      .row{grid-template-columns:1fr 1fr}
+    }
+
+    .box{
+      border:1px solid rgba(0,12,72,.10);
+      border-radius:14px;
+      padding:12px;
+      background:var(--panel);
+    }
+    .box.soft{background:var(--panelSoft);border-color:rgba(63,194,194,.22)}
+    .box h3{
+      margin:0 0 8px;
+      font-size:14px;
+      font-weight:800;
+      color:var(--primary);
+    }
+    .box p{
+      margin:0;
+      color:var(--muted);
+      line-height:1.5;
+    }
+    .divider{height:1px;background:var(--line);margin:10px 0}
+    .err{color:var(--erosion);font-size:13px;margin:6px 0 0}
+
+    label{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:6px;
+      font-weight:700;
+    }
+    .fieldHint{
+      margin:0 0 8px;
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.45;
+    }
+
+    input[type="text"], textarea, select{
+      width:100%;
+      border-radius:12px;
+      border:1px solid rgba(0,12,72,.14);
+      background:#fff;
+      color:var(--text);
+      padding:10px 10px;
+      outline:none;
+      font-size:14px;
+      font-family:Arial,sans-serif;
+    }
+    textarea{min-height:98px;resize:vertical}
+    select option{color:#000}
+
+    .guideGrid,.driverGrid,.suggestionGrid,.signalGrid,.indicatorGrid{
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+    }
+    @media (min-width:760px){
+      .guideGrid,.driverGrid,.suggestionGrid,.signalGrid,.indicatorGrid{
+        grid-template-columns:1fr 1fr;
+      }
+    }
+
+    .guideCard{
+      border:1px solid rgba(0,12,72,.10);
+      border-radius:14px;
+      padding:12px;
+      background:#fff;
+      transition:transform .12s ease, border-color .16s ease, box-shadow .16s ease;
+    }
+
+    .suggestionCard,
+    .signalCard,
+    .indicatorCard,
+    .interventionCard{
+      border:1px solid rgba(255,255,255,.08);
+      border-radius:14px;
+      padding:12px;
+      background:linear-gradient(180deg, var(--darkCard), var(--darkCard2));
+      color:var(--darkText);
+      transition:transform .12s ease, border-color .16s ease, background .16s ease, box-shadow .16s ease;
+      cursor:pointer;
+    }
+
+    .suggestionCard:hover,
+    .signalCard:hover,
+    .indicatorCard:hover,
+    .interventionCard:hover{
+      transform:translateY(-2px);
+      border-color:rgba(99,248,239,.55);
+      box-shadow:0 10px 20px rgba(0,12,72,.18);
+    }
+
+    .interventionCard.active,
+    .suggestionCard.active,
+    .signalCard.active,
+    .indicatorCard.active{
+      border-color:rgba(99,248,239,.85);
+      background:linear-gradient(180deg, #17367a, #155d6d);
+      box-shadow:0 12px 22px rgba(63,194,194,.16);
+    }
+
+    .iHead{
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:10px;
+    }
+    .iTitle{
+      margin:0;
+      font-size:14px;
+      font-weight:900;
+      color:var(--darkText);
+    }
+    .iTag{
+      display:inline-block;
+      padding:5px 9px;
+      border-radius:999px;
+      background:rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.14);
+      color:#ffffff;
+      font-size:11px;
+      font-weight:800;
+      white-space:nowrap;
+    }
+    .iBody{
+      margin-top:8px;
+      color:var(--darkMuted);
+      font-size:12px;
+      line-height:1.45;
+    }
+    .iBullets{
+      margin:8px 0 0 16px;
+      padding:0;
+      color:var(--darkMuted);
+      font-size:12px;
+      line-height:1.45;
+    }
+
+    .choiceTitle{
+      margin:0 0 4px;
+      font-size:13px;
+      font-weight:900;
+      color:inherit;
+    }
+    .choiceDesc{
+      margin:0;
+      color:inherit;
+      opacity:.94;
+      font-size:12px;
+      line-height:1.45;
+    }
+
+    .selectedBox{
+      margin-top:10px;
+      border:1px dashed rgba(33,20,153,.18);
+      background:rgba(33,20,153,.03);
+      border-radius:14px;
+      padding:10px 12px;
+    }
+    .selectedBox b{color:var(--primary)}
+    .selectedText{
+      color:var(--muted);
+      font-size:12px;
+      line-height:1.45;
+      margin-top:6px;
+    }
+
+    .driverCard{
+      border:1px solid rgba(0,12,72,.10);
+      border-radius:14px;
+      padding:12px;
+      background:#fff;
+    }
+    .driverCard strong{color:var(--primary)}
+
+    .previewWrap{margin-top:10px;display:none}
+    .previewTitle{margin:0 0 8px;font-size:12px;color:var(--muted);font-weight:750}
+    .previewImg{
+      width:100%;
+      height:auto;
+      border-radius:14px;
+      border:1px solid rgba(0,12,72,.10);
+      background:#fff;
+      display:block;
+    }
+
+    .kpi{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+    }
+    .kpiCard{
+      flex:1;
+      min-width:220px;
+      border:1px solid rgba(0,12,72,.10);
+      border-radius:14px;
+      padding:12px;
+      background:#fff;
+    }
+    .kpiTitle{font-size:12px;color:var(--muted);font-weight:750}
+    .kpiVal{margin-top:6px;font-size:20px;font-weight:900;color:var(--primary)}
+
+    .tag{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:12px;
+      padding:5px 10px;
+      border-radius:999px;
+      border:1px solid rgba(0,12,72,.12);
+      margin-top:10px;
+      font-weight:850;
+      background:#fff;
+      white-space:nowrap;
+    }
+    .tag.strong{border-color:rgba(25,184,169,.3);color:var(--strong)}
+    .tag.fragile{border-color:rgba(45,124,141,.3);color:var(--fragile)}
+    .tag.risk{border-color:rgba(211,154,0,.3);color:var(--risk)}
+
+    .actionsSticky{
+      position:sticky;
+      bottom:0;
+      z-index:9999;
+      margin-top:12px;
+      border:1px solid rgba(0,12,72,.10);
+      border-radius:18px;
+      background:rgba(255,255,255,.94);
+      backdrop-filter:blur(6px);
+      padding:10px 12px;
+      display:flex;
+      justify-content:space-between;
+      gap:10px;
+      flex-wrap:wrap;
+      box-shadow:0 10px 22px rgba(0,12,72,.10);
+    }
+    .actionsLeft{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+
+    button{
+      appearance:none;
+      border:0;
+      border-radius:14px;
+      padding:10px 14px;
+      cursor:pointer;
+      font-weight:750;
+      background:linear-gradient(90deg, rgba(63,194,194,.98), rgba(99,248,239,.95));
+      color:#001018;
+      transition:transform .12s ease, box-shadow .16s ease;
+    }
+    button:hover{
+      transform:translateY(-1px);
+      box-shadow:0 8px 18px rgba(0,12,72,.12);
+    }
+    button.secondary{
+      background:#fff;
+      border:1px solid rgba(0,12,72,.14);
+      color:var(--text);
+      font-weight:650;
+    }
+    button:disabled{opacity:.55;cursor:not-allowed;transform:none;box-shadow:none}
+
+    .bigQuestion{
+      font-size:28px;
+      line-height:1.2;
+      font-weight:900;
+      color:var(--primary);
+      margin:0;
+    }
+    .visibleNote{
+      font-size:14px;
+      line-height:1.5;
+      color:var(--muted);
+      font-weight:700;
+    }
+
+    @keyframes fadeUp{
+      from{opacity:0;transform:translateY(8px)}
+      to{opacity:1;transform:translateY(0)}
+    }
+    @keyframes softPulse{
+      0%{box-shadow:0 0 0 rgba(63,194,194,0)}
+      50%{box-shadow:0 0 18px rgba(63,194,194,.15)}
+      100%{box-shadow:0 0 0 rgba(63,194,194,0)}
+    }
+    .pulse{animation:softPulse 2.4s ease-in-out infinite}
+  </style>
+</head>
+
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <h1>ACT Block — Trust Intervention</h1>
+    <p class="sub"><span class="hl.before hl">Before you start</span>This flow helps you move from <b>trust understanding</b> to <b>intentional trust-building action</b> in your real working environment.</p>
+    <p class="sub">You will pause, choose the most relevant intervention, prepare carefully, apply it, and generate a clear preparation summary for use in practice.</p>
+    <div class="divider"></div>
+    <p class="sub"><span class="hl important">Important</span>Your preparation responses are confidential and used only for learning and development purposes.<br>They may be reviewed by Atria learning experts to support learning insights and improve development programs.</p>
+  </div>
+
+  <div class="card" id="mainCard">
+    <div class="cardHeader">
+      <div>
+        <h2 id="screenTitle">Step 1 — Pause and Observe Your Environment</h2>
+        <div class="small" id="screenSub">Slow down first. Trust usually shifts through small signals in everyday interactions.</div>
+      </div>
+      <div class="small" id="pageLabel">1 / 10</div>
+    </div>
+
+    <div class="section">
+
+      <div class="screen active" id="s1">
+        <div class="box soft pulse">
+          <p class="bigQuestion">What is the main thing weakening trust in your environment right now?</p>
+        </div>
+
+        <div class="box">
+          <div class="guideGrid">
+            <div class="guideCard">
+              <p class="choiceTitle" style="color:#211499">Confusion about responsibilities or expectations</p>
+              <p class="choiceDesc" style="color:#4e6288">Working Environment Analysis</p>
+            </div>
+            <div class="guideCard">
+              <p class="choiceTitle" style="color:#211499">Low participation or distance during discussions</p>
+              <p class="choiceDesc" style="color:#4e6288">Team Atmosphere Check</p>
+            </div>
+            <div class="guideCard">
+              <p class="choiceTitle" style="color:#211499">Need for a more open and honest conversation</p>
+              <p class="choiceDesc" style="color:#4e6288">Fireside Chat</p>
+            </div>
+            <div class="guideCard">
+              <p class="choiceTitle" style="color:#211499">Uncertainty caused by rumors or speculation</p>
+              <p class="choiceDesc" style="color:#4e6288">Addressing Rumors</p>
+            </div>
+            <div class="guideCard">
+              <p class="choiceTitle" style="color:#211499">Tension after a leadership change or promotion</p>
+              <p class="choiceDesc" style="color:#4e6288">Promotion Conversation Reset</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="screen" id="s2">
+        <div class="box">
+          <h3>Choose Your Trust Intervention</h3>
+          <p class="visibleNote">You will now select one intervention to apply in your working environment.<br>Choose the intervention that best reflects the situation you want to improve.<br>The goal is not complexity.<br>The goal is relevance and impact.</p>
+        </div>
+
+        <div class="driverGrid" id="interventionCards"></div>
+
+        <div class="selectedBox" id="selectedInterventionBox" style="display:none;">
+          <b>Selected intervention:</b>
+          <div class="selectedText" id="selectedInterventionText"></div>
+          <div class="selectedText" id="selectedInterventionFramework"></div>
+        </div>
+
+        <div id="errIntervention" class="err" aria-live="polite"></div>
+      </div>
+
+      <div class="screen" id="s3">
+        <div class="box">
+          <h3>Trust Driver Connection</h3>
+          <p class="small">The chosen intervention is linked to a primary and, in some cases, a secondary trust driver. This connection helps you understand <b>what condition of trust</b> the intervention is mainly designed to strengthen.</p>
+          <div class="divider"></div>
+          <p class="small">The <b>primary trust driver</b> shows where the intervention is most directly focused. A <b>secondary trust driver</b> shows where additional trust effects may also appear. This gives more clarity, predictability, and confidence before you prepare the intervention.</p>
+        </div>
+
+        <div class="driverGrid" id="driverConnectionGrid"></div>
+
+        <div class="selectedBox" id="selectedDriverBox" style="display:none;">
+          <b>Connected trust driver(s):</b>
+          <div class="selectedText" id="selectedDriverText"></div>
+        </div>
+
+        <div class="box soft">
+          <p class="small">Now that the trust driver connection is clear, the next step is to describe the specific situation you want to improve.</p>
+        </div>
+      </div>
+
+      <div class="screen" id="s4">
+        <div class="box">
+          <h3>Situation Examples</h3>
+          <p class="small" id="step4Intro">To help you begin, here are examples often associated with your chosen intervention.</p>
+        </div>
+
+        <div class="suggestionGrid" id="situationSuggestions"></div>
+
+        <div class="box">
+          <p class="visibleNote">You may choose one of these examples, adapt them to your situation, or describe your own observation.</p>
+          <div class="divider"></div>
+          <label for="situationInput">Write your situation below</label>
+          <textarea id="situationInput" placeholder="Describe the situation you want to improve."></textarea>
+          <div id="errSituation" class="err" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <div class="screen" id="s5">
+        <div class="box">
+          <h3>Define the Objective</h3>
+          <p class="small" id="step5Intro">What change would you like to see after the intervention?</p>
+          <div class="divider"></div>
+          <p class="small">This should be <b>observable, not vague</b>. Focus on what people would do differently, say more clearly, or experience more openly after the intervention.</p>
+        </div>
+
+        <div class="suggestionGrid" id="objectiveSuggestions"></div>
+
+        <div class="box">
+          <p class="visibleNote">You may use these examples or define your own objective.</p>
+          <div class="divider"></div>
+          <label for="objectiveInput">Write your objective below</label>
+          <textarea id="objectiveInput" placeholder="Describe the change you want to see after the intervention."></textarea>
+          <div id="errObjective" class="err" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <div class="screen" id="s6">
+        <div class="box">
+          <h3>Plan the Conversation or Session</h3>
+          <p class="small">Use the format below to prepare your intervention. These fields help you approach the conversation with more structure, intention, and readiness.</p>
+        </div>
+
+        <div class="box">
+          <label for="participantsInput">Participants</label>
+          <p class="fieldHint" id="participantsHint">Example: 6 team members</p>
+          <input id="participantsInput" type="text" placeholder="Example: 6 team members" />
+
+          <div class="divider"></div>
+
+          <label for="lengthInput">Length</label>
+          <p class="fieldHint" id="lengthHint">Example: 20 minutes</p>
+          <input id="lengthInput" type="text" placeholder="Example: 20 minutes" />
+
+          <div class="divider"></div>
+
+          <label for="settingInput">Setting</label>
+          <p class="fieldHint" id="settingHint">Example: quiet meeting space</p>
+          <input id="settingInput" type="text" placeholder="Example: quiet meeting space" />
+
+          <div class="divider"></div>
+
+          <label for="openingInput">Opening Line</label>
+          <p class="fieldHint" id="openingHint">Example opening line appears here based on your chosen intervention.</p>
+          <textarea id="openingInput" placeholder="Write your opening line here."></textarea>
+
+          <div id="errPlan" class="err" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <div class="screen" id="s7">
+        <div class="box">
+          <h3>Trust Signals You Will Practice</h3>
+          <p class="small">Now that you have a plan for your conversation, decide which trust signals you will intentionally practice during that conversation.</p>
+          <div class="divider"></div>
+          <p class="small">These signals help shape <b>how the intervention is experienced</b>, not just what is discussed. They support respectful dialogue, steadiness, openness, and trust-building behavior in real time.</p>
+        </div>
+
+        <div class="signalGrid" id="signalSuggestions"></div>
+
+        <div class="selectedBox" id="selectedSignalsBox" style="display:none;">
+          <b>Selected trust signals:</b>
+          <div class="selectedText" id="selectedSignalsText"></div>
+        </div>
+
+        <div id="errSignals" class="err" aria-live="polite"></div>
+      </div>
+
+      <div class="screen" id="s8">
+        <div class="box">
+          <h3>Indicators of Progress</h3>
+          <p class="small">This step helps you define what <b>early movement</b> might look like after the intervention.</p>
+          <div class="divider"></div>
+          <p class="small">Trust progress often appears through small behavioral signals first. These indicators help you notice whether the conversation created more clarity, openness, participation, or alignment.</p>
+        </div>
+
+        <div class="indicatorGrid" id="indicatorSuggestions"></div>
+
+        <div class="selectedBox" id="selectedIndicatorsBox" style="display:none;">
+          <b>Selected indicators of progress:</b>
+          <div class="selectedText" id="selectedIndicatorsText"></div>
+        </div>
+
+        <div class="box">
+          <p class="small">You may also write your own additional indicator if needed.</p>
+          <div class="divider"></div>
+          <label for="customIndicators">Optional custom indicator</label>
+          <textarea id="customIndicators" placeholder="Optional: add your own indicator of progress."></textarea>
+          <div id="errIndicators" class="err" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <div class="screen" id="s9">
+        <div class="box pulse">
+          <h3>Apply the Intervention</h3>
+          <p class="small">You are now ready to conduct the intervention in your working environment.</p>
+        </div>
+
+        <div class="box">
+          <h3>Advice for this week</h3>
+          <p class="small">Use your preparation as a guide over the next <b>one week</b>. The purpose is not to deliver a perfect session, but to apply the intervention intentionally and observe how trust responds in real work conditions.</p>
+          <div class="divider"></div>
+          <p class="small">Focus on clear communication, respectful dialogue, and the trust signals you selected. Give yourself enough time to notice how people respond before deciding what changed.</p>
+        </div>
+
+        <div class="box">
+          <h3>What happens next</h3>
+          <p class="small">After you apply the intervention in practice, continue to the final page to review your preparation and download your intervention guide.</p>
+        </div>
+      </div>
+
+      <div class="screen" id="s10">
+        <div class="box">
+          <h3>Preparation Preview</h3>
+          <p class="small"> Click the <b>"Generate Summary"</b>. Review your selected intervention, connected trust drivers, and preparation before downloading your <b>ACT Summary</b>.</p>
+        </div>
+
+        <div class="kpi" id="kpis"></div>
+
+        <div class="divider"></div>
+        <div class="box" style="background:rgba(33,20,153,.03);" id="interpretationBox"></div>
+
+        <div class="divider"></div>
+
+        <div class="previewWrap" id="previewWrap">
+          <p class="previewTitle">Preview (mobile: long-press to Save/Share if download is blocked)</p>
+          <img class="previewImg" id="previewImg" alt="ACT intervention summary preview image" />
+        </div>
+
+        <canvas id="resultsCanvas" width="1240" height="1754" style="display:none;" aria-hidden="true"></canvas>
+
+        <div class="actionsLeft" style="margin-top:10px;">
+          <button class="secondary" id="btnPng" type="button" disabled>Download ACT Summary (PNG)</button>
+        </div>
+
+        <div id="errPreview" class="err" aria-live="polite"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="actionsSticky">
+    <div class="actionsLeft">
+      <button class="secondary" id="btnBack" type="button">Back</button>
+      <button class="secondary" id="btnReset" type="button">Reset</button>
+    </div>
+    <div class="actionsLeft">
+      <button id="btnNext" type="button">Next</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const INTERVENTIONS = [
+    {
+      key:"working-environment-analysis",
+      title:"Working Environment Analysis",
+      framework:"Supported by Leaderfy Leadership Development Framework.",
+      primary:"Context Trust — Predictability",
+      secondary:"",
+      when:"Use this when the challenge relates to structure, responsibilities, or coordination.",
+      summary:"When structure becomes clearer, people gain confidence in how work happens.",
+      signals:[
+        "unclear responsibilities",
+        "unclear expectations",
+        "recurring misunderstandings about tasks",
+        "frustration about workload or processes"
+      ],
+      situationSuggestions:[
+        {title:"Responsibilities feel unclear across the team.",desc:"This points to reduced predictability because people may not know who owns what."},
+        {title:"Expectations are not understood consistently.",desc:"This can weaken clarity and lead to hesitation or repeated checking."},
+        {title:"Tasks overlap and create misunderstandings.",desc:"This often suggests a structure issue rather than a motivation issue."},
+        {title:"Process frustration is affecting collaboration.",desc:"When the workflow feels unclear, trust in how work happens can narrow."},
+        {title:"People seem confused about how work is organized.",desc:"This is often connected to the Context Trust driver."}
+      ],
+      objectiveSuggestions:[
+        {title:"create clearer expectations across the team",desc:"This is observable when people ask fewer clarifying questions later."},
+        {title:"reduce misunderstandings about roles and tasks",desc:"This is visible when people coordinate with less overlap or friction."},
+        {title:"improve coordination in how work is organized",desc:"This focuses on clearer structure, not just better feelings."},
+        {title:"clarify responsibilities before work begins",desc:"This helps make predictability more visible early."},
+        {title:"increase confidence in how work happens",desc:"This can be seen when people move forward with less uncertainty."}
+      ],
+      signalSuggestions:[
+        "explaining expectations clearly",
+        "asking clarifying questions",
+        "listening fully before responding",
+        "maintaining a calm and respectful tone",
+        "acknowledging perspectives before responding"
+      ],
+      indicatorSuggestions:[
+        {title:"clearer questions during discussion",desc:"This suggests people are engaging more directly with the structure."},
+        {title:"fewer misunderstandings about responsibilities",desc:"This shows clearer ownership is beginning to form."},
+        {title:"more direct clarification of expectations",desc:"This indicates increasing predictability."},
+        {title:"less confusion about how work is organized",desc:"This points to stronger Context Trust."},
+        {title:"greater confidence about next steps",desc:"This shows the structure is becoming easier to follow."}
+      ],
+      examples:{
+        participants:"Example: 4–6 team members directly involved in the work process",
+        length:"Example: 20–30 minutes",
+        setting:"Example: regular team meeting or a focused planning discussion",
+        opening:"Example: “I’d like us to pause and clarify how responsibilities and expectations are currently working, and where confusion may be affecting the team.”"
+      },
+      advice:"With this intervention, expect that some people may first describe process frustrations rather than the trust issue itself. That is useful. In these situations, clearer structure often becomes the first visible step toward stronger trust."
+    },
+    {
+      key:"team-atmosphere-check",
+      title:"Team Atmosphere Check",
+      framework:"Supported by Leaderfy Leadership Development Framework.",
+      primary:"Mutual Relationship Trust — Goodwill",
+      secondary:"Context Trust — Predictability",
+      when:"Use this when collaboration or participation feels limited.",
+      summary:"When people feel heard and respected, participation increases.",
+      signals:[
+        "reduced participation during meetings",
+        "hesitation when sharing opinions",
+        "tension within discussions"
+      ],
+      situationSuggestions:[
+        {title:"Meetings feel quieter than usual.",desc:"This may indicate lower openness or reduced willingness to contribute."},
+        {title:"Team members only speak when asked directly.",desc:"This often suggests hesitation rather than full participation."},
+        {title:"Collaboration feels distant or cautious.",desc:"This can point to weakened relational safety."},
+        {title:"Some perspectives may not be shared openly.",desc:"This suggests the team may not yet feel fully safe to contribute."},
+        {title:"Discussions seem polite but not fully honest.",desc:"This often connects to the Mutual Relationship Trust driver."}
+      ],
+      objectiveSuggestions:[
+        {title:"encourage more open participation during meetings",desc:"This is observable when more people speak voluntarily."},
+        {title:"create space for team members to express concerns",desc:"This becomes visible when concerns are voiced earlier."},
+        {title:"improve openness and communication within the team",desc:"This should show in the tone and depth of discussion."},
+        {title:"better understand what may be affecting collaboration",desc:"This focuses on surfacing what is not yet fully visible."},
+        {title:"increase the sense of psychological safety",desc:"This is reflected when people share with less caution."}
+      ],
+      signalSuggestions:[
+        "listening fully before responding",
+        "inviting perspectives openly",
+        "asking clarifying questions",
+        "acknowledging viewpoints before reacting",
+        "maintaining a calm and respectful tone"
+      ],
+      indicatorSuggestions:[
+        {title:"increased participation in discussion",desc:"This suggests more people feel able to contribute."},
+        {title:"team members asking more questions",desc:"This can be an early sign of growing openness."},
+        {title:"concerns being raised earlier",desc:"This often signals stronger relational safety."},
+        {title:"reduced hesitation during conversation",desc:"This suggests caution may be narrowing."},
+        {title:"more direct sharing of perspectives",desc:"This points to improved goodwill and participation."}
+      ],
+      examples:{
+        participants:"Example: 5–6 team members",
+        length:"Example: 20 minutes",
+        setting:"Example: regular team meeting or quiet meeting room",
+        opening:"Example: “I’d like us to pause and talk about how the team atmosphere feels right now and what would help us work better together.”"
+      },
+      advice:"With this intervention, expect that participation may start slowly. Some people may wait for others to speak first. That is normal. Early hesitation does not mean the intervention is failing."
+    },
+    {
+      key:"fireside-chat",
+      title:"Fireside Chat",
+      framework:"Supported by Leaderfy Leadership Development Framework.",
+      primary:"Mutual Relationship Trust — Goodwill",
+      secondary:"Personality Trust — Consistency",
+      when:"Use this when the situation requires a more open and honest conversation.",
+      summary:"Open dialogue strengthens relational safety and credibility.",
+      signals:[
+        "sensitive topics affecting the team",
+        "ongoing concerns about direction or decisions",
+        "the need for a more informal and open discussion"
+      ],
+      situationSuggestions:[
+        {title:"A sensitive issue is affecting team morale.",desc:"This often requires a more human conversation rather than a formal update."},
+        {title:"People seem concerned but are not speaking openly.",desc:"This suggests the topic may need a safer format."},
+        {title:"The team needs a more human conversation about current challenges.",desc:"This is often linked to both goodwill and credibility."},
+        {title:"Tension is present beneath the surface.",desc:"This can indicate that concerns are being held back."},
+        {title:"A formal meeting may be too rigid for the issue.",desc:"This may be a better fit for an open dialogue format."}
+      ],
+      objectiveSuggestions:[
+        {title:"create a more open and honest dialogue",desc:"This becomes visible when people share more directly."},
+        {title:"help the team express concerns more safely",desc:"This is observable when people speak with less caution."},
+        {title:"reduce quiet tension around a sensitive issue",desc:"This focuses on surfacing what is being held back."},
+        {title:"make space for people to speak more openly",desc:"This is seen in the depth and tone of conversation."},
+        {title:"strengthen relational safety during a difficult discussion",desc:"This supports both openness and credibility."}
+      ],
+      signalSuggestions:[
+        "invite concerns directly",
+        "let others finish before responding",
+        "acknowledge perspectives before offering conclusions",
+        "ask clarifying questions before reacting",
+        "maintain a steady and respectful tone"
+      ],
+      indicatorSuggestions:[
+        {title:"more honest sharing during the conversation",desc:"This suggests the discussion became safer."},
+        {title:"concerns expressed more directly than usual",desc:"This is an important early sign of openness."},
+        {title:"less caution in how people speak",desc:"This indicates lower fear in the interaction."},
+        {title:"greater openness around a sensitive topic",desc:"This supports the relational purpose of the intervention."},
+        {title:"stronger sense of mutual understanding",desc:"This often emerges when perspectives are heard fully."}
+      ],
+      examples:{
+        participants:"Example: 4–8 team members affected by the issue",
+        length:"Example: 25–30 minutes",
+        setting:"Example: quieter, less formal meeting setting",
+        opening:"Example: “I’d like us to have a more open conversation about what may be affecting the team right now, and what people may need to say honestly.”"
+      },
+      advice:"With this intervention, expect that sensitive topics may not emerge immediately. You may first hear careful, partial, or indirect sharing. Keep the tone steady and do not rush the openness."
+    },
+    {
+      key:"addressing-rumors",
+      title:"Addressing Rumors",
+      framework:"Supported by Leaderfy Leadership Development Framework.",
+      primary:"Context Trust — Predictability",
+      secondary:"Mutual Relationship Trust — Goodwill",
+      when:"Use this when uncertainty or speculation is affecting the environment.",
+      summary:"Clarifying facts restores transparency and reduces uncertainty.",
+      signals:[
+        "misinformation circulating",
+        "confusion about decisions",
+        "speculation about future changes"
+      ],
+      situationSuggestions:[
+        {title:"Speculation is shaping how people feel about a recent change.",desc:"This often reduces predictability before facts are clarified."},
+        {title:"People seem unsure what information is accurate.",desc:"This can increase anxiety and cautious discussion."},
+        {title:"Confusion about decisions is affecting morale.",desc:"This points to uncertainty replacing clear communication."},
+        {title:"Assumptions are replacing clear facts.",desc:"This suggests the environment needs more transparency."},
+        {title:"Uncertainty is making conversations cautious.",desc:"This often affects both predictability and participation."}
+      ],
+      objectiveSuggestions:[
+        {title:"clarify facts and reduce speculation",desc:"This becomes visible when assumptions are replaced by clearer understanding."},
+        {title:"restore confidence in what is known",desc:"This should reduce unnecessary uncertainty."},
+        {title:"create a more transparent conversation",desc:"This is observable when questions become more direct."},
+        {title:"reduce uncertainty around current decisions",desc:"This supports stronger predictability."},
+        {title:"help the team ask direct questions instead of guessing",desc:"This connects facts back to trust."}
+      ],
+      signalSuggestions:[
+        "explaining expectations clearly",
+        "asking clarifying questions",
+        "inviting perspectives openly",
+        "maintaining a calm and respectful tone",
+        "acknowledging concerns directly"
+      ],
+      indicatorSuggestions:[
+        {title:"people ask more direct questions",desc:"This suggests speculation is becoming more open and fact-based."},
+        {title:"fewer assumptions are voiced",desc:"This indicates greater clarity is forming."},
+        {title:"discussion becomes more fact-based",desc:"This supports stronger Context Trust."},
+        {title:"uncertainty is addressed more openly",desc:"This can reduce quiet speculation."},
+        {title:"team members appear less hesitant",desc:"This may reflect reduced anxiety."}
+      ],
+      examples:{
+        participants:"Example: those most affected by the uncertainty or speculation",
+        length:"Example: 20–25 minutes",
+        setting:"Example: a direct update or discussion meeting",
+        opening:"Example: “I’d like us to pause and clarify what is known, what is not yet confirmed, and what questions need to be asked directly.”"
+      },
+      advice:"With this intervention, expect that some people may still test the clarity by repeating uncertain assumptions. Respond with calm transparency. The goal is not to eliminate every concern instantly, but to reduce speculation with clearer facts."
+    },
+    {
+      key:"promotion-conversation-reset",
+      title:"Promotion Conversation Reset",
+      framework:"Supported by Leaderfy Leadership Development Framework.",
+      primary:"Personality Trust — Consistency",
+      secondary:"Context Trust — Predictability",
+      when:"Use this when leadership transitions create uncertainty.",
+      summary:"Clarifying expectations strengthens credibility and alignment.",
+      signals:[
+        "adjustment to a new leadership role",
+        "unclear expectations following promotion",
+        "team uncertainty about responsibilities"
+      ],
+      situationSuggestions:[
+        {title:"The team is adjusting to a new reporting relationship.",desc:"This often creates uncertainty about how work and communication should now happen."},
+        {title:"A recent promotion created uncertainty about expectations.",desc:"This may affect both credibility and predictability."},
+        {title:"People seem unsure how to work with the new setup.",desc:"This can narrow confidence and alignment."},
+        {title:"Role changes affected confidence or alignment.",desc:"This may create hesitation or mixed assumptions."},
+        {title:"Responsibilities after the transition are still unclear.",desc:"This is often a strong fit for this intervention."}
+      ],
+      objectiveSuggestions:[
+        {title:"clarify expectations after the promotion",desc:"This becomes visible when people understand the new setup more clearly."},
+        {title:"strengthen confidence in the new leadership setup",desc:"This supports credibility during transition."},
+        {title:"reduce uncertainty about roles and responsibilities",desc:"This strengthens alignment and predictability."},
+        {title:"help the team adjust to the transition more openly",desc:"This supports both communication and structure."},
+        {title:"improve alignment after the role change",desc:"This is visible when working relationships become clearer."}
+      ],
+      signalSuggestions:[
+        "explaining expectations clearly",
+        "listening fully before responding",
+        "asking clarifying questions",
+        "acknowledging perspectives before responding",
+        "maintaining a calm and respectful tone"
+      ],
+      indicatorSuggestions:[
+        {title:"clearer understanding of roles",desc:"This points to stronger predictability."},
+        {title:"more direct questions about expectations",desc:"This can indicate safer adjustment to the transition."},
+        {title:"less hesitation after the transition",desc:"This suggests clearer alignment."},
+        {title:"greater confidence in the new setup",desc:"This supports the credibility dimension."},
+        {title:"better alignment in how the team works",desc:"This often reflects stronger trust in the transition."}
+      ],
+      examples:{
+        participants:"Example: team members directly affected by the role change",
+        length:"Example: 20–25 minutes",
+        setting:"Example: team discussion or focused reset conversation",
+        opening:"Example: “I’d like us to clarify what this new setup means in practice, what expectations may still feel unclear, and what would help the team adjust with more confidence.”"
+      },
+      advice:"With this intervention, expect that some uncertainty may appear as politeness, silence, or indirect questions rather than direct disagreement. That is common in transitions. Clear expectations and steady tone matter here."
+    }
+  ];
+
+  let currentScreen = 1;
+  let selectedInterventionKey = null;
+  let selectedSignals = [];
+  let selectedIndicators = [];
+
+  function getSelectedIntervention(){
+    return INTERVENTIONS.find(i => i.key === selectedInterventionKey);
+  }
+
+  function setScreen(n){
+    currentScreen = n;
+    Array.from({length:10}, (_,i)=>`s${i+1}`).forEach((id, idx)=>{
+      document.getElementById(id).classList.toggle("active", (idx+1)===n);
+    });
+
+    const titles = {
+      1:["Step 1 — Pause and Observe Your Environment","Slow down first. Trust usually shifts through small signals in everyday interactions."],
+      2:["Step 2 — Choose Your Trust Intervention","Select the intervention that best reflects your situation."],
+      3:["Step 3 — Trust Driver Connection","See how your chosen intervention connects directly to the trust drivers."],
+      4:["Step 4 — Identify the Situation","Use guided examples to describe the situation you want to improve."],
+      5:["Step 5 — Define the Objective","Clarify the observable change you want to see after the intervention."],
+      6:["Step 6 — Plan the Conversation or Session","Prepare your intervention with structure and intention."],
+      7:["Step 7 — Trust Signals You Will Practice","Choose two trust behaviors you will intentionally apply."],
+      8:["Step 8 — Indicators of Progress","Identify the signs that would suggest your intervention helped."],
+      9:["Step 9 — Apply the Intervention","Conduct the intervention in your working environment."],
+      10:["Step 10 — Preparation Preview","Review your selected intervention and preparation before downloading your summary."]
+    };
+
+    document.getElementById("screenTitle").textContent = titles[n][0];
+    document.getElementById("screenSub").textContent = titles[n][1];
+    document.getElementById("pageLabel").textContent = n + " / 10";
+
+    document.getElementById("btnBack").disabled = n === 1;
+    document.getElementById("btnNext").textContent = n === 10 ? "Generate Summary" : "Next";
+  }
+
+  function renderInterventions(){
+    const wrap = document.getElementById("interventionCards");
+    wrap.innerHTML = "";
+    INTERVENTIONS.forEach(item=>{
+      const div = document.createElement("div");
+      div.className = "interventionCard";
+      div.dataset.key = item.key;
+      div.innerHTML = `
+        <div class="iHead">
+          <p class="iTitle">${item.title}</p>
+          <span class="iTag">${item.primary}</span>
+        </div>
+        <div class="iBody">${item.when}</div>
+        <ul class="iBullets">
+          ${item.signals.map(s=>`<li>${s}</li>`).join("")}
+        </ul>
+      `;
+      div.addEventListener("click", ()=>selectIntervention(item.key));
+      wrap.appendChild(div);
+    });
+  }
+
+  function selectIntervention(key){
+    selectedInterventionKey = key;
+    document.querySelectorAll(".interventionCard").forEach(el=>{
+      el.classList.toggle("active", el.dataset.key === key);
+    });
+
+    const item = getSelectedIntervention();
+    if(item){
+      document.getElementById("selectedInterventionBox").style.display = "block";
+      document.getElementById("selectedInterventionText").textContent =
+        item.title + " — " + item.when + " Primary trust driver: " + item.primary + (item.secondary ? " • Secondary trust driver: " + item.secondary : "");
+      document.getElementById("selectedInterventionFramework").textContent = item.framework;
+    }
+
+    renderDriverConnection();
+    renderSituationSuggestions();
+    renderObjectiveSuggestions();
+    renderSignalSuggestions();
+    renderIndicatorSuggestions();
+    updateDynamicLabels();
+    updatePlanExamples();
+  }
+
+  function renderDriverConnection(){
+    const item = getSelectedIntervention();
+    const wrap = document.getElementById("driverConnectionGrid");
+    wrap.innerHTML = "";
+
+    if(!item){
+      document.getElementById("selectedDriverBox").style.display = "none";
+      document.getElementById("selectedDriverText").textContent = "";
+      return;
+    }
+
+    const card = document.createElement("div");
+    card.className = "driverCard";
+    card.innerHTML = `
+      <p class="choiceTitle" style="color:#211499">${item.title}</p>
+      <p class="choiceDesc" style="color:#4e6288"><strong>Primary trust driver:</strong> ${item.primary}</p>
+      ${item.secondary ? `<p class="choiceDesc" style="margin-top:6px;color:#4e6288"><strong>Secondary trust driver:</strong> ${item.secondary}</p>` : ``}
+      <div class="divider"></div>
+      <p class="choiceDesc" style="color:#4e6288">This intervention is designed to strengthen trust in the area most closely connected to the situation you identified. The primary driver shows the strongest expected trust effect. The secondary driver shows where additional positive impact may also appear.</p>
+    `;
+    wrap.appendChild(card);
+
+    document.getElementById("selectedDriverBox").style.display = "block";
+    document.getElementById("selectedDriverText").textContent =
+      "Selected intervention: " + item.title + " • Primary trust driver: " + item.primary + (item.secondary ? " • Secondary trust driver: " + item.secondary : "");
+  }
+
+  function updateDynamicLabels(){
+    const item = getSelectedIntervention();
+    if(!item) return;
+    document.getElementById("step4Intro").textContent =
+      "To help you begin, here are examples often associated with " + item.title + " (" + item.primary + (item.secondary ? " + " + item.secondary : "") + ").";
+    document.getElementById("step5Intro").textContent =
+      "What change would you like to see after the intervention? These examples are linked to " + item.title + " (" + item.primary + (item.secondary ? " + " + item.secondary : "") + ").";
+  }
+
+  function updatePlanExamples(){
+    const item = getSelectedIntervention();
+    if(!item) return;
+    document.getElementById("participantsHint").textContent = item.examples.participants;
+    document.getElementById("lengthHint").textContent = item.examples.length;
+    document.getElementById("settingHint").textContent = item.examples.setting;
+    document.getElementById("openingHint").textContent = item.examples.opening;
+
+    document.getElementById("participantsInput").placeholder = item.examples.participants;
+    document.getElementById("lengthInput").placeholder = item.examples.length;
+    document.getElementById("settingInput").placeholder = item.examples.setting;
+    document.getElementById("openingInput").placeholder = item.examples.opening.replace("Example: ","");
+  }
+
+  function renderSituationSuggestions(){
+    const wrap = document.getElementById("situationSuggestions");
+    wrap.innerHTML = "";
+    const item = getSelectedIntervention();
+    if(!item) return;
+
+    item.situationSuggestions.forEach(obj=>{
+      const card = document.createElement("div");
+      card.className = "suggestionCard";
+      card.innerHTML = `
+        <p class="choiceTitle">${obj.title}</p>
+        <p class="choiceDesc">${obj.desc}</p>
+      `;
+      card.addEventListener("click", ()=>{
+        document.getElementById("situationInput").value = obj.title;
+        document.querySelectorAll("#situationSuggestions .suggestionCard").forEach(el=>el.classList.remove("active"));
+        card.classList.add("active");
+      });
+      wrap.appendChild(card);
+    });
+  }
+
+  function renderObjectiveSuggestions(){
+    const wrap = document.getElementById("objectiveSuggestions");
+    wrap.innerHTML = "";
+    const item = getSelectedIntervention();
+    if(!item) return;
+
+    item.objectiveSuggestions.forEach(obj=>{
+      const card = document.createElement("div");
+      card.className = "suggestionCard";
+      card.innerHTML = `
+        <p class="choiceTitle">${obj.title}</p>
+        <p class="choiceDesc">${obj.desc}</p>
+      `;
+      card.addEventListener("click", ()=>{
+        document.getElementById("objectiveInput").value = obj.title;
+        document.querySelectorAll("#objectiveSuggestions .suggestionCard").forEach(el=>el.classList.remove("active"));
+        card.classList.add("active");
+      });
+      wrap.appendChild(card);
+    });
+  }
+
+  function renderSignalSuggestions(){
+    const wrap = document.getElementById("signalSuggestions");
+    wrap.innerHTML = "";
+    const item = getSelectedIntervention();
+    if(!item) return;
+
+    selectedSignals = [];
+    document.getElementById("selectedSignalsBox").style.display = "none";
+    document.getElementById("selectedSignalsText").textContent = "";
+
+    item.signalSuggestions.forEach(text=>{
+      const card = document.createElement("div");
+      card.className = "signalCard";
+      card.dataset.value = text;
+      card.innerHTML = `
+        <p class="choiceTitle">${text}</p>
+        <p class="choiceDesc">Use this to shape how the conversation feels and how trust is experienced during the intervention.</p>
+      `;
+      card.addEventListener("click", ()=>toggleSignal(text, card));
+      wrap.appendChild(card);
+    });
+  }
+
+  function toggleSignal(text, card){
+    const idx = selectedSignals.indexOf(text);
+    if(idx > -1){
+      selectedSignals.splice(idx,1);
+      card.classList.remove("active");
+    }else{
+      if(selectedSignals.length >= 2) return;
+      selectedSignals.push(text);
+      card.classList.add("active");
+    }
+
+    const box = document.getElementById("selectedSignalsBox");
+    const txt = document.getElementById("selectedSignalsText");
+    if(selectedSignals.length){
+      box.style.display = "block";
+      txt.textContent = selectedSignals.join(" • ");
+    }else{
+      box.style.display = "none";
+      txt.textContent = "";
+    }
+  }
+
+  function renderIndicatorSuggestions(){
+    const wrap = document.getElementById("indicatorSuggestions");
+    wrap.innerHTML = "";
+    const item = getSelectedIntervention();
+    if(!item) return;
+
+    selectedIndicators = [];
+    document.getElementById("selectedIndicatorsBox").style.display = "none";
+    document.getElementById("selectedIndicatorsText").textContent = "";
+
+    item.indicatorSuggestions.forEach(obj=>{
+      const card = document.createElement("div");
+      card.className = "indicatorCard";
+      card.dataset.value = obj.title;
+      card.innerHTML = `
+        <p class="choiceTitle">${obj.title}</p>
+        <p class="choiceDesc">${obj.desc}</p>
+      `;
+      card.addEventListener("click", ()=>toggleIndicator(obj.title, card));
+      wrap.appendChild(card);
+    });
+  }
+
+  function toggleIndicator(text, card){
+    const idx = selectedIndicators.indexOf(text);
+    if(idx > -1){
+      selectedIndicators.splice(idx,1);
+      card.classList.remove("active");
+    }else{
+      selectedIndicators.push(text);
+      card.classList.add("active");
+    }
+
+    const box = document.getElementById("selectedIndicatorsBox");
+    const txt = document.getElementById("selectedIndicatorsText");
+    if(selectedIndicators.length){
+      box.style.display = "block";
+      txt.textContent = selectedIndicators.join(" • ");
+    }else{
+      box.style.display = "none";
+      txt.textContent = "";
+    }
+  }
+
+  function validateStep2(){
+    const err = document.getElementById("errIntervention");
+    err.textContent = "";
+    if(!selectedInterventionKey){
+      err.textContent = "Please choose one intervention before continuing.";
+      return false;
+    }
+    return true;
+  }
+
+  function validateStep4(){
+    const err = document.getElementById("errSituation");
+    err.textContent = "";
+    if(!(document.getElementById("situationInput").value || "").trim()){
+      err.textContent = "Please describe the situation before continuing.";
+      return false;
+    }
+    return true;
+  }
+
+  function validateStep5(){
+    const err = document.getElementById("errObjective");
+    err.textContent = "";
+    if(!(document.getElementById("objectiveInput").value || "").trim()){
+      err.textContent = "Please define your objective before continuing.";
+      return false;
+    }
+    return true;
+  }
+
+  function validateStep6(){
+    const err = document.getElementById("errPlan");
+    err.textContent = "";
+    const ids = ["participantsInput","lengthInput","settingInput","openingInput"];
+    for(const id of ids){
+      if(!(document.getElementById(id).value || "").trim()){
+        err.textContent = "Please complete all planning fields before continuing.";
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function validateStep7(){
+    const err = document.getElementById("errSignals");
+    err.textContent = "";
+    if(selectedSignals.length !== 2){
+      err.textContent = "Please select exactly two trust signals.";
+      return false;
+    }
+    return true;
+  }
+
+  function validateStep8(){
+    const err = document.getElementById("errIndicators");
+    err.textContent = "";
+    const custom = (document.getElementById("customIndicators").value || "").trim();
+    if(!selectedIndicators.length && !custom){
+      err.textContent = "Please select at least one indicator of progress or write your own.";
+      return false;
+    }
+    return true;
+  }
+
+  function getState(){
+    const item = getSelectedIntervention();
+    return {
+      intervention:item ? item.title : "",
+      framework:item ? item.framework : "",
+      when:item ? item.when : "",
+      primary:item ? item.primary : "",
+      secondary:item ? item.secondary : "",
+      advice:item ? item.advice : "",
+      situation:(document.getElementById("situationInput").value || "").trim(),
+      objective:(document.getElementById("objectiveInput").value || "").trim(),
+      participants:(document.getElementById("participantsInput").value || "").trim(),
+      length:(document.getElementById("lengthInput").value || "").trim(),
+      setting:(document.getElementById("settingInput").value || "").trim(),
+      opening:(document.getElementById("openingInput").value || "").trim(),
+      signals:[...selectedSignals],
+      indicators:[...selectedIndicators],
+      customIndicators:(document.getElementById("customIndicators").value || "").trim()
+    };
+  }
+
+  function getOutcome(state){
+    if((state.primary || "").indexOf("Context") > -1){
+      return {
+        label:"Context Trust Support",
+        css:"strong",
+        body:"Your chosen intervention mainly supports clarity, structure, and predictability. The conversation is likely to be strongest when expectations become more visible and easier to follow."
+      };
+    }
+    if((state.primary || "").indexOf("Mutual Relationship") > -1){
+      return {
+        label:"Mutual Relationship Trust Support",
+        css:"fragile",
+        body:"Your chosen intervention mainly supports openness, participation, and relational safety. The conversation is likely to be strongest when people feel more able to speak honestly and earlier."
+      };
+    }
+    return {
+      label:"Personality Trust Support",
+      css:"fragile",
+      body:"Your chosen intervention mainly supports credibility, alignment, and behavioral consistency. The conversation is likely to be strongest when expectations and behavior feel steady and believable."
+    };
+  }
+
+  function wrapLines(ctx, text, maxWidth){
+    const words = String(text || "").split(/\s+/).filter(Boolean);
+    const lines = [];
+    let line = "";
+    for(const w of words){
+      const test = line ? line + " " + w : w;
+      if(ctx.measureText(test).width > maxWidth && line){
+        lines.push(line);
+        line = w;
+      }else{
+        line = test;
+      }
+    }
+    if(line) lines.push(line);
+    return lines;
+  }
+
+  function roundRect(ctx,x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);
+    ctx.arcTo(x+w,y,x+w,y+h,r);
+    ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r);
+    ctx.arcTo(x,y,x+w,y,r);
+    ctx.closePath();
+  }
+
+  function drawSectionTitle(ctx, title, x, y){
+    ctx.fillStyle = "#211499";
+    ctx.font = "800 22px Arial";
+    ctx.fillText(title, x, y);
+  }
+
+  function drawParagraph(ctx, text, x, y, width, fontSize=18, lineGap=28, color="#000C48"){
+    ctx.fillStyle = color;
+    ctx.font = `500 ${fontSize}px Arial`;
+    const lines = wrapLines(ctx, text, width);
+    lines.forEach((line, idx)=>{
+      ctx.fillText(line, x, y + idx * lineGap);
+    });
+    return y + lines.length * lineGap;
+  }
+
+  function drawBulletList(ctx, items, x, y, maxWidth){
+    ctx.fillStyle = "#000C48";
+    ctx.font = "500 18px Arial";
+    let cy = y;
+    items.forEach(item=>{
+      const wrapped = wrapLines(ctx, item, maxWidth - 24);
+      ctx.fillText("•", x, cy);
+      let wx = x + 18;
+      wrapped.forEach((line, idx)=>{
+        ctx.fillText(line, wx, cy + idx*26);
+      });
+      cy += wrapped.length * 26 + 10;
+    });
+    return cy;
+  }
+
+  function renderSummaryCards(state, outcome){
+    document.getElementById("kpis").innerHTML = `
+      <div class="kpiCard">
+        <div class="kpiTitle">Chosen Intervention</div>
+        <div class="kpiVal">${state.intervention || "—"}</div>
+        <div class="small">${state.primary || "—"}</div>
+      </div>
+      <div class="kpiCard">
+        <div class="kpiTitle">Trust Signals</div>
+        <div class="kpiVal">${state.signals.length}</div>
+        <div class="small">${state.signals.join(" • ") || "—"}</div>
+      </div>
+      <div class="kpiCard">
+        <div class="kpiTitle">Preparation Focus</div>
+        <div class="kpiVal">${state.objective || "—"}</div>
+        <div class="small">${outcome.label}</div>
+        <div class="tag ${outcome.css}">${outcome.label}</div>
+      </div>
+    `;
+
+    document.getElementById("interpretationBox").innerHTML = `
+      <h3>Preparation Insight</h3>
+      <p><b>${outcome.label}</b></p>
+      <p>${outcome.body}</p>
+      <div class="divider"></div>
+      <p class="small"><b>Next step:</b> use this preparation as your guide when you conduct the intervention in your working environment. Expect that some hesitation, caution, or indirect responses may appear at first depending on the situation. Stay steady, keep the opening clear, and use your selected trust signals intentionally.</p>
+    `;
+  }
+
+  function generateSummary(state){
+    const canvas = document.getElementById("resultsCanvas");
+    const ctx = canvas.getContext("2d");
+    const W = canvas.width, H = canvas.height;
+
+    ctx.clearRect(0,0,W,H);
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0,0,W,H);
+
+    ctx.fillStyle = "#CDFFFC";
+    ctx.fillRect(0,0,W,110);
+
+    ctx.fillStyle = "#211499";
+    ctx.font = "800 34px Arial";
+    ctx.fillText("ACT Intervention Preparation Guide", 60, 68);
+
+    ctx.fillStyle = "#367484";
+    ctx.font = "600 18px Arial";
+    ctx.fillText("Trust Deep Dive", 60, 95);
+
+    ctx.textAlign = "right";
+    ctx.fillStyle = "#211499";
+    ctx.font = "700 18px Arial";
+    ctx.fillText("Atria Learning and Development", W - 60, 68);
+    ctx.textAlign = "left";
+
+    let x = 60;
+    let y = 150;
+    const contentW = W - 120;
+
+    drawSectionTitle(ctx, "Situation", x, y);
+    y = drawParagraph(ctx, state.situation || "—", x, y + 34, contentW) + 16;
+
+    drawSectionTitle(ctx, "Chosen intervention", x, y);
+    y = drawParagraph(ctx, state.intervention || "—", x, y + 34, contentW) + 8;
+    y = drawParagraph(ctx, state.framework || "", x, y, contentW, 16, 24, "#4e6288") + 18;
+
+    drawSectionTitle(ctx, "Trust driver", x, y);
+    const driverText = state.primary + (state.secondary ? " + " + state.secondary : "");
+    y = drawParagraph(ctx, driverText || "—", x, y + 34, contentW) + 16;
+
+    drawSectionTitle(ctx, "Objective", x, y);
+    y = drawParagraph(ctx, state.objective || "—", x, y + 34, contentW) + 16;
+
+    drawSectionTitle(ctx, "Plan", x, y);
+    y += 34;
+    const planItems = [
+      "Participants: " + (state.participants || "—"),
+      "Length: " + (state.length || "—"),
+      "Setting: " + (state.setting || "—")
+    ];
+    y = drawBulletList(ctx, planItems, x + 8, y, contentW) + 8;
+
+    ctx.fillStyle = "#d7d7d7";
+    ctx.fillRect(x + 28, y, 6, 76);
+    ctx.fillStyle = "#000C48";
+    ctx.font = "500 18px Arial";
+    const openLines = wrapLines(ctx, "“" + (state.opening || "—") + "”", contentW - 70);
+    let oy = y + 18;
+    openLines.forEach(line=>{
+      ctx.fillText(line, x + 50, oy);
+      oy += 26;
+    });
+    y = Math.max(y + 76, oy) + 28;
+
+    drawSectionTitle(ctx, "Trust signals to practice", x, y);
+    y += 34;
+    y = drawBulletList(ctx, state.signals.length ? state.signals : ["—"], x + 8, y, contentW) + 18;
+
+    drawSectionTitle(ctx, "Indicators of progress", x, y);
+    y += 34;
+    const indicators = [...state.indicators];
+    if(state.customIndicators) indicators.push(state.customIndicators);
+    y = drawBulletList(ctx, indicators.length ? indicators : ["—"], x + 8, y, contentW) + 22;
+
+    drawSectionTitle(ctx, "Preparation Insight", x, y);
+    y = drawParagraph(
+      ctx,
+      `${state.intervention} is connected primarily to ${state.primary}${state.secondary ? " and secondarily to " + state.secondary : ""}. This means your intervention is designed to strengthen that trust condition most directly through the kind of conversation you are preparing.`,
+      x,
+      y + 34,
+      contentW
+    ) + 18;
+
+    drawSectionTitle(ctx, "Interpretation / advice", x, y);
+    const outcome = getOutcome(state);
+    const adviceText = `${outcome.body} ${state.advice} Suggested focus: keep your opening clear, use your selected trust signals consistently, and pay attention to small signs of movement rather than expecting immediate full openness or instant resolution.`;
+    y = drawParagraph(ctx, adviceText, x, y + 34, contentW) + 18;
+
+    drawSectionTitle(ctx, "Next step", x, y);
+    y = drawParagraph(
+      ctx,
+      "Use this guide during your intervention week. Keep it visible before the conversation so you stay aligned with the intervention, trust driver, objective, and signals you selected.",
+      x,
+      y + 34,
+      contentW
+    ) + 18;
+
+    ctx.strokeStyle = "rgba(0,12,72,.10)";
+    ctx.beginPath();
+    ctx.moveTo(60, H - 60);
+    ctx.lineTo(W - 60, H - 60);
+    ctx.stroke();
+
+    ctx.fillStyle = "#4e6288";
+    ctx.font = "500 15px Arial";
+    ctx.fillText("This guide is for learning and preparation purposes only.", 60, H - 28);
+
+    const url = canvas.toDataURL("image/png");
+    document.getElementById("previewImg").src = url;
+    document.getElementById("previewWrap").style.display = "block";
+    document.getElementById("btnPng").disabled = false;
+
+    renderSummaryCards(state, outcome);
+  }
+
+  function downloadPNG(){
+    const canvas = document.getElementById("resultsCanvas");
+    const url = canvas.toDataURL("image/png");
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "act-block-trust-intervention-summary.png";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  }
+
+  function validatePreview(){
+    const err = document.getElementById("errPreview");
+    err.textContent = "";
+    if(!selectedInterventionKey){
+      err.textContent = "Please select an intervention first.";
+      return false;
+    }
+    return true;
+  }
+
+  document.addEventListener("DOMContentLoaded", ()=>{
+    renderInterventions();
+    renderDriverConnection();
+    setScreen(1);
+
+    const btnBack = document.getElementById("btnBack");
+    const btnReset = document.getElementById("btnReset");
+    const btnNext = document.getElementById("btnNext");
+    const btnPng = document.getElementById("btnPng");
+
+    btnBack.addEventListener("click", ()=>{
+      if(currentScreen > 1) setScreen(currentScreen - 1);
+    });
+
+    btnNext.addEventListener("click", ()=>{
+      if(currentScreen === 2 && !validateStep2()) return;
+      if(currentScreen === 4 && !validateStep4()) return;
+      if(currentScreen === 5 && !validateStep5()) return;
+      if(currentScreen === 6 && !validateStep6()) return;
+      if(currentScreen === 7 && !validateStep7()) return;
+      if(currentScreen === 8 && !validateStep8()) return;
+
+      if(currentScreen < 10){
+        setScreen(currentScreen + 1);
+        return;
+      }
+
+      if(currentScreen === 10){
+        if(!validatePreview()) return;
+        generateSummary(getState());
+      }
+    });
+
+    btnReset.addEventListener("click", ()=>{
+      currentScreen = 1;
+      selectedInterventionKey = null;
+      selectedSignals = [];
+      selectedIndicators = [];
+
+      document.querySelectorAll(".interventionCard, .suggestionCard, .signalCard, .indicatorCard").forEach(el=>el.classList.remove("active"));
+      document.getElementById("selectedInterventionBox").style.display = "none";
+      document.getElementById("selectedInterventionText").textContent = "";
+      document.getElementById("selectedInterventionFramework").textContent = "";
+      document.getElementById("selectedDriverBox").style.display = "none";
+      document.getElementById("selectedDriverText").textContent = "";
+      document.getElementById("selectedSignalsBox").style.display = "none";
+      document.getElementById("selectedSignalsText").textContent = "";
+      document.getElementById("selectedIndicatorsBox").style.display = "none";
+      document.getElementById("selectedIndicatorsText").textContent = "";
+
+      [
+        "situationInput","objectiveInput","participantsInput","lengthInput",
+        "settingInput","openingInput","customIndicators"
+      ].forEach(id => document.getElementById(id).value = "");
+
+      ["errIntervention","errSituation","errObjective","errPlan","errSignals","errIndicators","errPreview"].forEach(id=>{
+        document.getElementById(id).textContent = "";
+      });
+
+      document.getElementById("previewWrap").style.display = "none";
+      document.getElementById("previewImg").src = "";
+      document.getElementById("btnPng").disabled = true;
+      document.getElementById("kpis").innerHTML = "";
+      document.getElementById("interpretationBox").innerHTML = "";
+
+      document.getElementById("driverConnectionGrid").innerHTML = "";
+      document.getElementById("situationSuggestions").innerHTML = "";
+      document.getElementById("objectiveSuggestions").innerHTML = "";
+      document.getElementById("signalSuggestions").innerHTML = "";
+      document.getElementById("indicatorSuggestions").innerHTML = "";
+
+      renderInterventions();
+      renderDriverConnection();
+      setScreen(1);
+      document.getElementById("mainCard").scrollIntoView({behavior:"smooth", block:"start"});
+    });
+
+    btnPng.addEventListener("click", ()=>downloadPNG());
+  });
+</script>
+</body>
+</html>
